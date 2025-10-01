@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import logo from "../../assests/logo.png";
 import Link from "next/link";
@@ -16,6 +17,7 @@ const openSans = Open_Sans({
 export default function Navbar() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   const openCalendly = () => {
     window.open("https://calendly.com/muhammadnoumansha140", "_blank");
@@ -59,18 +61,25 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`${
-                  scrolled ? "text-white" : "text-white"
-                } font-semibold hover:text-[#4370F3] transition-colors duration-200 relative group`}
-              >
-                {link.name}
-                <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-[#27A1F6] transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`${
+                    scrolled ? "text-white" : "text-white"
+                  } font-semibold hover:text-[#4370F3] transition-colors duration-200 relative group ${
+                    isActive ? "text-[#27A1F6]" : ""
+                  }`}
+                >
+                  {link.name}
+                  <span className={`absolute left-0 -bottom-1 h-0.5 bg-[#27A1F6] transition-all duration-300 ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}></span>
+                </Link>
+              );
+            })}
             <button
               onClick={openCalendly}
               className={`ml-6 px-6 py-3 rounded-full font-bold text-sm transition-all duration-300 ${
@@ -110,16 +119,21 @@ export default function Navbar() {
           }`}
         >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="block px-3 py-4 text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`block px-3 py-4 text-lg font-medium hover:bg-gray-100 rounded-md transition-colors ${
+                    isActive ? "text-[#27A1F6] bg-blue-50" : "text-gray-800"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
             <button
               onClick={() => {
                 openCalendly();
